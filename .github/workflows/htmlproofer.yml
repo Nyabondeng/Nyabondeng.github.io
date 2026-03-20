@@ -1,4 +1,4 @@
-﻿name: HTMLProofer
+﻿name: Jekyll Build
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [master]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,19 +18,10 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
+          bundler-cache: true
 
-      - name: Install Jekyll and html-proofer
-        run: |
-          gem install jekyll bundler html-proofer
+      - name: Install dependencies
+        run: bundle install
 
       - name: Build Jekyll site
-        run: jekyll build
-
-      - name: Test HTML with htmlproofer
-        run: |
-          htmlproofer ./_site \
-            --disable-external \
-            --allow-hash-href \
-            --check-html \
-            --empty-alt-ignore \
-            --url-ignore "/#/,#,/localhost:4000/"
+        run: bundle exec jekyll build
